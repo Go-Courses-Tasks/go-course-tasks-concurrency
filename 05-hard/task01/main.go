@@ -66,7 +66,7 @@ func (m *ShardedMap[K, V]) shardFor(key K) *shard[K, V] {
 func (m *ShardedMap[K, V]) Set(key K, value V) {
 }
 
-// TODO: реализуй Get (RLock!)
+// TODO: реализуй Get — подумай какой тип блокировки уместен для чтения
 func (m *ShardedMap[K, V]) Get(key K) (V, bool) {
 	var zero V
 	return zero, false

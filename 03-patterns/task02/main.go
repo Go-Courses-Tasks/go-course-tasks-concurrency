@@ -69,7 +69,7 @@ func NewLazyTokenBucket(rate, capacity float64) *LazyTokenBucket {
 }
 
 // TODO: реализуй Allow для LazyTokenBucket
-// Подсказка: при каждом вызове вычисли сколько токенов накопилось с последнего обращения
+// Подсказка: горутина не нужна — используй lastRefill и time.Since между вызовами
 func (lb *LazyTokenBucket) Allow() bool {
 	lb.mu.Lock()
 	defer lb.mu.Unlock()
