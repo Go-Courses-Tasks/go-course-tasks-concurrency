@@ -54,6 +54,28 @@ func TestProducerConsumer(t *testing.T) {
 	}
 }
 
+// === Вариант 2: через sync.Cond ===
+
+// TODO: реализуй producerConsumerCond
+// Подсказка: буфер — обычный срез; производители ждут пока буфер полон, потребители — пока пуст
+func producerConsumerCond(producers, consumers, n, bufSize int) []int {
+	return nil
+}
+
+func TestProducerConsumerCond(t *testing.T) {
+	results := producerConsumerCond(3, 4, 20, 5)
+	sort.Ints(results)
+
+	if len(results) != 20 {
+		t.Fatalf("ожидали 20 результатов, получили %d", len(results))
+	}
+	for i, v := range results {
+		if v != i*i {
+			t.Errorf("[%d] = %d, want %d", i, v, i*i)
+		}
+	}
+}
+
 func main() {
 	results := producerConsumerChan(2, 3, 10, 3)
 	sort.Ints(results)

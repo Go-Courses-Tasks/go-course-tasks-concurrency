@@ -82,8 +82,10 @@ func (m *ShardedMap[K, V]) Len() int {
 }
 
 // TODO: реализуй Range — обходит все элементы всех шардов
-// Подсказка: возвращай RLock/RUnlock вокруг каждого вызова fn, чтобы не блокировать запись
+// fn возвращает false — прерывает обход
+// Подсказка: не держи мьютекс во время вызова fn (fn может быть медленной или вызывать Set/Delete на той же map)
 func (m *ShardedMap[K, V]) Range(fn func(K, V) bool) {
+	// TODO
 }
 
 func main() {

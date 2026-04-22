@@ -55,20 +55,11 @@ func NewActor[S any](initial S) *Actor[S] {
 	return nil
 }
 
+// TODO: реализуй run — бесконечный цикл обработки сообщений из mailbox
+// Подсказка: message может быть двух видов (fn или ask) — для ask нужно отправить результат в replyCh
+// Цикл должен завершаться при закрытии a.done
 func (a *Actor[S]) run() {
-	for {
-		select {
-		case msg := <-a.mailbox:
-			if msg.ask != nil {
-				result := msg.ask(&a.state)
-				msg.replyCh <- result
-			} else {
-				msg.fn(&a.state)
-			}
-		case <-a.done:
-			return
-		}
-	}
+	// TODO
 }
 
 // TODO: реализуй Send — fire-and-forget; учитывай что actor может быть остановлен

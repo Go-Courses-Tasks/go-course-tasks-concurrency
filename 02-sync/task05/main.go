@@ -86,13 +86,10 @@ func (q *BlockingQueue[T]) Len() int {
 	return len(q.items)
 }
 
-// Close закрывает очередь и пробуждает все заблокированные горутины
+// TODO: реализуй Close — пометь очередь закрытой и пробуди ВСЕ заблокированные горутины
+// Подсказка: одиночный Signal разбудит только одного — нужен Broadcast на обоих Cond
 func (q *BlockingQueue[T]) Close() {
-	q.mu.Lock()
-	defer q.mu.Unlock()
-	q.closed = true
-	q.notFull.Broadcast()
-	q.notEmpty.Broadcast()
+	// TODO
 }
 
 func main() {

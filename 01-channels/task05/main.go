@@ -42,12 +42,8 @@ func merge2(a, b <-chan int) <-chan int {
 func mergeN(channels ...<-chan int) <-chan int {
 	out := make(chan int)
 	var wg sync.WaitGroup
-
-	// TODO: на каждый канал — горутина
-	// TODO: WaitGroup.Wait() в отдельной горутине, потом close(out)
-	_ = wg
-	_ = channels
-
+	_ = &wg
+	// TODO
 	return out
 }
 

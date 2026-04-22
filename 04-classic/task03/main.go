@@ -31,6 +31,8 @@ type OrderedPrinterChan struct {
 	after2 chan struct{}
 }
 
+// TODO: реализуй NewOrderedPrinterChan
+// Подсказка: нужны сигналы "первая уже отработала" и "вторая уже отработала"
 func NewOrderedPrinterChan() *OrderedPrinterChan {
 	return &OrderedPrinterChan{
 		after1: make(chan struct{}),
@@ -38,20 +40,19 @@ func NewOrderedPrinterChan() *OrderedPrinterChan {
 	}
 }
 
+// TODO: реализуй First — вызови fn и сигнализируй что можно запускать Second
 func (p *OrderedPrinterChan) First(fn func()) {
-	fn()
-	close(p.after1)
+	// TODO
 }
 
+// TODO: реализуй Second — дождись сигнала от First, вызови fn, сигнализируй Third
 func (p *OrderedPrinterChan) Second(fn func()) {
-	<-p.after1
-	fn()
-	close(p.after2)
+	// TODO
 }
 
+// TODO: реализуй Third — дождись сигнала от Second и вызови fn
 func (p *OrderedPrinterChan) Third(fn func()) {
-	<-p.after2
-	fn()
+	// TODO
 }
 
 // === Вариант B: через WaitGroup ===
@@ -122,6 +123,14 @@ func TestOrderChan(t *testing.T) {
 
 func TestOrderWG(t *testing.T) {
 	p := NewOrderedPrinterWG()
+	result := runInOrder(p.First, p.Second, p.Third)
+	if result != "firstsecondthird" {
+		t.Errorf("порядок нарушен: %q", result)
+	}
+}
+
+func TestOrderAtomic(t *testing.T) {
+	p := &OrderedPrinterAtomic{}
 	result := runInOrder(p.First, p.Second, p.Third)
 	if result != "firstsecondthird" {
 		t.Errorf("порядок нарушен: %q", result)

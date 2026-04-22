@@ -80,35 +80,20 @@ type Scheduler struct {
 }
 
 // TODO: реализуй NewScheduler
-// Подсказка: запусти workers горутин, которые читают задачи из jobs
+// Подсказка: проинициализируй поля (tasks, jobs, done) и запусти workers горутин s.worker()
+// Не забудь про s.wg чтобы Shutdown мог дождаться завершения
 func NewScheduler(workers int) *Scheduler {
+	// TODO
 	return nil
 }
 
+// TODO: реализуй worker — читает из s.jobs, запускает ts.task.Fn(ts.ctx)
+// Подсказка: по результату обнови соответствующий счётчик в s.stats (Cancelled если ctx отменён, иначе Failed/Completed)
+// Не забудь закрыть ts.done, чтобы Wait разблокировался
+// И реагируй на s.done чтобы выйти при Shutdown
 func (s *Scheduler) worker() {
 	defer s.wg.Done()
-	for {
-		select {
-		case ts, ok := <-s.jobs:
-			if !ok {
-				return
-			}
-			err := ts.task.Fn(ts.ctx)
-			ts.err = err
-			if err != nil {
-				if ts.ctx.Err() != nil {
-					atomic.AddInt64(&s.stats.Cancelled, 1)
-				} else {
-					atomic.AddInt64(&s.stats.Failed, 1)
-				}
-			} else {
-				atomic.AddInt64(&s.stats.Completed, 1)
-			}
-			close(ts.done)
-		case <-s.done:
-			return
-		}
-	}
+	// TODO
 }
 
 // TODO: реализуй Schedule
@@ -134,11 +119,11 @@ func (s *Scheduler) Wait(id TaskID) error {
 	return ts.err
 }
 
-// Shutdown останавливает планировщик
+// TODO: реализуй Shutdown — останови планировщик и дождись завершения воркеров
+// Подсказка: закрытие s.done сигнализирует всем воркерам о выходе
+// Не закрывай s.jobs — в него могут писать горутины зависимостей
 func (s *Scheduler) Shutdown() {
-	close(s.done)
-	close(s.jobs)
-	s.wg.Wait()
+	// TODO
 }
 
 func (s *Scheduler) Stats() Stats {
