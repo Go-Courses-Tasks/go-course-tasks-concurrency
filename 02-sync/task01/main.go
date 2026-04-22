@@ -33,8 +33,8 @@ import (
 )
 
 type entry[V any] struct {
-	value   V
-	expiry  time.Time
+	value  V
+	expiry time.Time
 }
 
 type TTLCache[K comparable, V any] struct {
@@ -87,12 +87,7 @@ func (c *TTLCache[K, V]) Len() int {
 func (c *TTLCache[K, V]) Cleanup() {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	now := time.Now()
-	for k, e := range c.items {
-		if now.After(e.expiry) {
-			delete(c.items, k)
-		}
-	}
+	// TODO: пройди по c.items, удали всё где now.After(e.expiry)
 }
 
 func main() {

@@ -35,25 +35,12 @@ import (
 
 // withDone оборачивает канал in — при закрытии done прекращает чтение.
 // TODO: реализуй
+// Подсказка: оба направления — чтение и запись — должны учитывать отмену
 func withDone(done <-chan struct{}, in <-chan int) <-chan int {
 	out := make(chan int)
 	go func() {
 		defer close(out)
-		for {
-			select {
-			case <-done:
-				return
-			case v, ok := <-in:
-				if !ok {
-					return
-				}
-				select {
-				case out <- v:
-				case <-done:
-					return
-				}
-			}
-		}
+		// TODO
 	}()
 	return out
 }
@@ -62,30 +49,17 @@ func generate(done <-chan struct{}, nums ...int) <-chan int {
 	out := make(chan int)
 	go func() {
 		defer close(out)
-		for _, n := range nums {
-			select {
-			case out <- n:
-			case <-done:
-				return
-			}
-		}
+		// TODO: защити отправку каждого числа от блокировки при отмене
 	}()
 	return out
 }
 
-// TODO: добавь параметр done в square
+// TODO: реализуй square с поддержкой отмены через done
 func square(done <-chan struct{}, in <-chan int) <-chan int {
 	out := make(chan int)
 	go func() {
 		defer close(out)
-		for n := range in {
-			// TODO: проверяй done перед отправкой
-			select {
-			case out <- n * n:
-			case <-done:
-				return
-			}
-		}
+		// TODO: аналогично generate, но читаем из канала, а не из среза
 	}()
 	return out
 }

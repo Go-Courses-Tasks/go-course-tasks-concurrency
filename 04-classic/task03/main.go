@@ -69,9 +69,15 @@ func NewOrderedPrinterWG() *OrderedPrinterWG {
 }
 
 // TODO: реализуй First, Second, Third через WaitGroup
-func (p *OrderedPrinterWG) First(fn func())  { fn(); p.wg1.Done() }
-func (p *OrderedPrinterWG) Second(fn func()) { p.wg1.Wait(); fn(); p.wg2.Done() }
-func (p *OrderedPrinterWG) Third(fn func())  { p.wg2.Wait(); fn() }
+func (p *OrderedPrinterWG) First(fn func()) {
+	// TODO
+}
+func (p *OrderedPrinterWG) Second(fn func()) {
+	// TODO
+}
+func (p *OrderedPrinterWG) Third(fn func()) {
+	// TODO
+}
 
 // === Вариант C: через atomic ===
 
@@ -80,13 +86,19 @@ type OrderedPrinterAtomic struct {
 }
 
 // TODO: реализуй через spin-ожидание atomic
-func (p *OrderedPrinterAtomic) First(fn func())  { fn(); p.state.Store(1) }
-func (p *OrderedPrinterAtomic) Second(fn func()) { for p.state.Load() < 1 { /* spin */ }; fn(); p.state.Store(2) }
-func (p *OrderedPrinterAtomic) Third(fn func())  { for p.state.Load() < 2 { /* spin */ }; fn() }
+func (p *OrderedPrinterAtomic) First(fn func()) {
+	// TODO
+}
+func (p *OrderedPrinterAtomic) Second(fn func()) {
+	// TODO
+}
+func (p *OrderedPrinterAtomic) Third(fn func()) {
+	// TODO
+}
 
 // === Тесты ===
 
-func runInOrder(first, second, third func()) string {
+func runInOrder(first, second, third func(func())) string {
 	var sb strings.Builder
 	var wg sync.WaitGroup
 	wg.Add(3)

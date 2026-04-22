@@ -33,23 +33,7 @@ func merge2(a, b <-chan int) <-chan int {
 	out := make(chan int)
 	go func() {
 		defer close(out)
-		// TODO: используй for + select с nil-каналами для завершения
-		for a != nil || b != nil {
-			select {
-			case v, ok := <-a:
-				if !ok {
-					a = nil // nil-канал никогда не выбирается в select
-					continue
-				}
-				out <- v
-			case v, ok := <-b:
-				if !ok {
-					b = nil
-					continue
-				}
-				out <- v
-			}
-		}
+		// TODO: подсказка: nil-канал в select никогда не срабатывает — используй это для исключения закрытых каналов
 	}()
 	return out
 }

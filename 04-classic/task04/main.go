@@ -78,29 +78,16 @@ func NewFooBarMutex(n int) *FooBarMutex {
 }
 
 // TODO: реализуй Foo и Bar для варианта B
+// Подсказка: sync.Cond позволяет эффективно ожидать смены флага turn
 func (fb *FooBarMutex) Foo(fn func()) {
 	for range fb.n {
-		fb.mu.Lock()
-		for fb.turn != 0 {
-			fb.cond.Wait()
-		}
-		fn()
-		fb.turn = 1
-		fb.cond.Broadcast()
-		fb.mu.Unlock()
+		// TODO
 	}
 }
 
 func (fb *FooBarMutex) Bar(fn func()) {
 	for range fb.n {
-		fb.mu.Lock()
-		for fb.turn != 1 {
-			fb.cond.Wait()
-		}
-		fn()
-		fb.turn = 0
-		fb.cond.Broadcast()
-		fb.mu.Unlock()
+		// TODO
 	}
 }
 

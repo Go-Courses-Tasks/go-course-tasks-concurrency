@@ -44,11 +44,11 @@ const (
 type TaskID int64
 
 type Task struct {
-	ID       TaskID
-	Priority Priority
-	Deadline time.Time // нулевое = без дедлайна
+	ID        TaskID
+	Priority  Priority
+	Deadline  time.Time // нулевое = без дедлайна
 	DependsOn []TaskID  // ID задач от которых зависим
-	Fn       func(ctx context.Context) error
+	Fn        func(ctx context.Context) error
 }
 
 type taskState struct {
@@ -80,20 +80,9 @@ type Scheduler struct {
 }
 
 // TODO: реализуй NewScheduler
+// Подсказка: запусти workers горутин, которые читают задачи из jobs
 func NewScheduler(workers int) *Scheduler {
-	s := &Scheduler{
-		tasks:   make(map[TaskID]*taskState),
-		workers: workers,
-		jobs:    make(chan *taskState, 100),
-		done:    make(chan struct{}),
-	}
-
-	s.wg.Add(workers)
-	for range workers {
-		go s.worker()
-	}
-
-	return s
+	return nil
 }
 
 func (s *Scheduler) worker() {
@@ -122,58 +111,15 @@ func (s *Scheduler) worker() {
 	}
 }
 
-// TODO: реализуй Schedule — добавляет задачу в очередь
-// Если у задачи есть DependsOn — ждём завершения всех зависимостей в горутине
+// TODO: реализуй Schedule
+// Подсказка: если есть DependsOn — жди зависимости асинхронно; Deadline — через context
 func (s *Scheduler) Schedule(task Task) TaskID {
-	if task.ID == 0 {
-		task.ID = TaskID(s.nextID.Add(1))
-	}
-
-	ctx := context.Background()
-	if !task.Deadline.IsZero() {
-		var cancel context.CancelFunc
-		ctx, cancel = context.WithDeadline(ctx, task.Deadline)
-		_ = cancel
-	}
-
-	ctx, cancel := context.WithCancel(ctx)
-	ts := &taskState{
-		task:     task,
-		ctx:      ctx,
-		cancel:   cancel,
-		done:     make(chan struct{}),
-		queuedAt: time.Now(),
-	}
-
-	s.mu.Lock()
-	s.tasks[task.ID] = ts
-	s.mu.Unlock()
-
-	// Если есть зависимости — ждём в горутине
-	if len(task.DependsOn) > 0 {
-		go func() {
-			for _, depID := range task.DependsOn {
-				s.Wait(depID)
-			}
-			s.jobs <- ts
-		}()
-	} else {
-		s.jobs <- ts
-	}
-
-	return task.ID
+	return 0
 }
 
 // TODO: реализуй Cancel
 func (s *Scheduler) Cancel(id TaskID) bool {
-	s.mu.Lock()
-	ts, ok := s.tasks[id]
-	s.mu.Unlock()
-	if !ok {
-		return false
-	}
-	ts.cancel()
-	return true
+	return false
 }
 
 // Wait блокируется до завершения задачи

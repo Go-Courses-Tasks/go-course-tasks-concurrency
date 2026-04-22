@@ -50,14 +50,9 @@ type Actor[S any] struct {
 }
 
 // TODO: реализуй NewActor
+// Подсказка: запусти run() в горутине — она обрабатывает все сообщения последовательно
 func NewActor[S any](initial S) *Actor[S] {
-	a := &Actor[S]{
-		state:   initial,
-		mailbox: make(chan message[S], 100),
-		done:    make(chan struct{}),
-	}
-	go a.run()
-	return a
+	return nil
 }
 
 func (a *Actor[S]) run() {
@@ -76,28 +71,17 @@ func (a *Actor[S]) run() {
 	}
 }
 
-// TODO: реализуй Send — fire-and-forget
+// TODO: реализуй Send — fire-and-forget; учитывай что actor может быть остановлен
 func (a *Actor[S]) Send(fn func(state *S)) {
-	select {
-	case a.mailbox <- message[S]{fn: fn}:
-	case <-a.done:
-	}
 }
 
-// TODO: реализуй Ask — отправить запрос и получить ответ
+// TODO: реализуй Ask — запрос с ожиданием ответа
 func (a *Actor[S]) Ask(fn func(state *S) any) any {
-	reply := make(chan any, 1)
-	select {
-	case a.mailbox <- message[S]{ask: fn, replyCh: reply}:
-	case <-a.done:
-		return nil
-	}
-	return <-reply
+	return nil
 }
 
 // TODO: реализуй Stop
 func (a *Actor[S]) Stop() {
-	a.once.Do(func() { close(a.done) })
 }
 
 // === Пример: Банковский счёт без мьютекса ===
